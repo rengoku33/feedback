@@ -28,42 +28,44 @@ const AdminTable = () => {
   if (error) return <div className='text-center mt-16 text-xl text-white font-semibold bg-red-600'>Error: {error}</div>;
 
   return (
-    <div className="max-w-[90%] mx-auto px-4 py-8">
+    <div className="max-w-full mx-auto px-4 py-8">
       <h1 className="text-2xl text-center bg-white py-4">Feedback Records</h1>
-      <table className="min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 border-b">ID</th>
-            <th className="py-2 px-4 border-b">Full Name</th>
-            <th className="py-2 px-4 border-b">Email</th>
-            <th className="py-2 px-4 border-b">Phone Number</th>
-            <th className="py-2 px-4 border-b">Products</th>
-            <th className="py-2 px-4 border-b">Feedback</th>
-            <th className="py-2 px-4 border-b">PQ</th>
-            <th className="py-2 px-4 border-b">SF</th>
-            <th className="py-2 px-4 border-b">OE</th>
-            <th className="py-2 px-4 border-b">Signature</th>
-          </tr>
-        </thead>
-        <tbody className='text-center'>
-          {records.map((record) => (
-            <tr key={record.id}>
-              <td className="py-2 px-4 border-b">{record.id}</td>
-              <td className="py-2 px-4 border-b">{record.fullName}</td>
-              <td className="py-2 px-4 border-b">{record.email}</td>
-              <td className="py-2 px-4 border-b">{record.phoneNumber}</td>
-              <td className="py-2 px-4 border-b">{JSON.parse(record.products).join(', ')}</td>
-              <td className="py-2 px-4 border-b">{record.feedback}</td>
-              <td className="py-2 px-4 border-b">{record.productQuality}</td>
-              <td className="py-2 px-4 border-b">{record.staffFriendliness}</td>
-              <td className="py-2 px-4 border-b">{record.overallExperience}</td>
-              <td className="py-2 px-4 border-b">
-                <img src={record.signature} alt="Signature" width="100" />
-              </td>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border-b">ID</th>
+              <th className="py-2 px-4 border-b">Full Name</th>
+              <th className="py-2 px-4 border-b">Email</th>
+              <th className="py-2 px-4 border-b">Phone Number</th>
+              <th className="py-2 px-4 border-b">Products</th>
+              <th className="py-2 px-4 border-b">Feedback</th>
+              <th className="py-2 px-4 border-b">PQ</th>
+              <th className="py-2 px-4 border-b">SF</th>
+              <th className="py-2 px-4 border-b">OE</th>
+              <th className="py-2 px-4 border-b">Signature</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className='text-center'>
+            {records.map((record) => (
+              <tr key={record.id}>
+                <td className="py-2 px-4 border-b">{record.id}</td>
+                <td className="py-2 px-4 border-b">{record.fullName}</td>
+                <td className="py-2 px-4 border-b">{record.email}</td>
+                <td className="py-2 px-4 border-b">{record.phoneNumber}</td>
+                <td className="py-2 px-4 border-b">{JSON.parse(record.products).join(', ')}</td>
+                <td className="py-2 px-4 border-b">{record.feedback}</td>
+                <td className="py-2 px-4 border-b">{record.productQuality}</td>
+                <td className="py-2 px-4 border-b">{record.staffFriendliness}</td>
+                <td className="py-2 px-4 border-b">{record.overallExperience}</td>
+                <td className="py-2 px-4 border-b">
+                  <img src={record.signature} alt="Signature" width="100" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

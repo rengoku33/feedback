@@ -11,6 +11,7 @@ const FeedbackForm = () => {
     const formState = useSelector(state => state.form);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const signatureRef = React.useRef(null);
+    const [canvasWidth, setCanvasWidth] = useState(window.innerWidth > 1024 ? 390 : (window.innerWidth > 768 ? 320 : 230));
 
     const todayDate = formState.todayDate || new Date().toISOString().split('T')[0];
 
@@ -46,6 +47,23 @@ const FeedbackForm = () => {
         }
     };
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth > 1024) {
+                setCanvasWidth(390);
+            } else if (window.innerWidth > 768) {
+                setCanvasWidth(320);
+            } else {
+                setCanvasWidth(200);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         handleSignature();
@@ -58,7 +76,7 @@ const FeedbackForm = () => {
                 // validation and obj creation
                 await dispatch(submitForm({ ...formState }));
 
-                console.log(formState.containValError);
+                // console.log(formState.containValError);
                 if (formState.containValError === 'false') {
                     try {
                         // Make API request
@@ -94,7 +112,7 @@ const FeedbackForm = () => {
     }, [isSubmitting, dispatch, formState]);
 
     return (
-        <div className="max-w-5xl mx-auto px-16 py-7 bg-white rounded-md mt-9">
+        <div className="max-lg:w-auto max-w-5xl mx-auto px-16 py-7 bg-white rounded-md mt-9 max-[720px]:px-5">
             <form onSubmit={handleSubmit} className="space-y-4">
                 <h1 className='text-center text-2xl'>Purchase Feedback Form</h1>
                 <div className="grid grid-cols-2 gap-3">
@@ -124,9 +142,9 @@ const FeedbackForm = () => {
                         value={formState.phoneNumber}
                         onChange={handleChange}
                         placeholder="Phone Number"
-                        className="p-2 border border-gray-300 rounded"
+                        className="p-2 border border-gray-300 rounded max-sm:col-span-2 "
                     />
-                    <div className="flex items-center space-x-2">
+                    <div className="max-sm:col-span-3 max-sm:mr-3 flex items-center space-x-2">
                         <label className="w-40 text-lg">Purchase Date:</label>
                         <input
                             readOnly
@@ -138,9 +156,9 @@ const FeedbackForm = () => {
                         />
                     </div>
                     <div className="col-span-3 mt-7"></div>
-                    <div className="flex flex-col md:flex-row items-start md:items-center space-x-2">
-                        <label className="w-40 text-lg">Choose Product(s):</label>
-                        <div className="flex flex-col space-y-2 overflow-auto w-[55%]" style={{ maxHeight: '100px' }}>
+                    <div className="flex flex-col md:flex-row items-start md:items-center space-x-2 max-[480px]:col-span-3">
+                        <label className="max-[480px]:w-100 w-40 text-lg">Choose Product(s):</label>
+                        <div className="flex flex-col space-y-2 overflow-auto w-[55%] max-[480px]:w-[100%]" style={{ maxHeight: '100px' }}>
                             {["product 1", "product 2", "product 3", "product 4", "product 5", "product 6", "product 7"].map(product => (
                                 <label key={product} className="flex items-center space-x-2 cursor-pointer">
                                     <input
@@ -157,12 +175,12 @@ const FeedbackForm = () => {
                         </div>
                     </div>
                     <div>
-                        <label className=" mb-2 text-lg font-semibold col-span-2 flex">Selected Products:</label>
+                        <label className="max-[480px]:hidden mb-2 text-lg font-semibold col-span-2 flex">Selected Products:</label>
                         <textarea
                             name="selectedProducts"
                             value={(Array.isArray(formState.products) ? formState.products.join(', ') : '')}
                             readOnly
-                            className="p-2 border border-none col-span-2 w-full cursor-default"
+                            className="max-[480px]:hidden p-2 border border-none col-span-2 w-full cursor-default"
                         />
                     </div>
                     <textarea
@@ -173,7 +191,7 @@ const FeedbackForm = () => {
                         className="p-2 border border-gray-300 rounded col-span-3 h-36"
                     />
                     <div className='col-span-3 mt-7'></div>
-                    <div className="flex flex-col space-y-4 col-span-1">
+                    <div className="flex flex-col space-y-4 col-span-1 ">
                         <div>
                             <label className="block mb-2 text-lg">Quality of the product:</label>
                             <StarRating
@@ -200,7 +218,7 @@ const FeedbackForm = () => {
                         <label className="block mb-2">Signature:</label>
                         <SignatureCanvas
                             ref={signatureRef}
-                            canvasProps={{ width: 390, height: 210, className: 'signature-pad' }}
+                            canvasProps={{ width: canvasWidth, height: 210, className: 'signature-pad' }}
                         />
                         <button
                             type="button"
@@ -210,6 +228,7 @@ const FeedbackForm = () => {
                             Clear
                         </button>
                     </div>
+
                 </div>
                 {formState.errors && Object.keys(formState.errors).length > 0 && (
                     <div className="text-red-600">
